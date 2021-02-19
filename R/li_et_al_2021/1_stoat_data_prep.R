@@ -1,7 +1,7 @@
-
 rm(list = ls())
 library(auk)
 library(dplyr)
+library(rstoat)
 
 # Source Data: EBird Basic Dataset Version 1.12, July 2020. Retrieved 9/13/2020.
 # Link: https://ebird.org/data/download/ebd
@@ -130,8 +130,18 @@ write.csv(hummingbird_thinned, "ruby-throated_hummingbird.csv", row.names = FALS
 # Both datasets (.CSVs) uploaded to Map of Life using Map of Life Uploader
 # www.mol.org/upload
 
-# Then start annotation
-start_annotation("--UUID HERE--", "TT_final", c("landsat8-evi-30-16", "modis-lst_day-1000-1", "modis-lst_day-1000-30"))
-start_annotation("--UUID HERE--", "RTH_final", c("landsat8-evi-30-16", "landsat8-evi-250-16", "modis-lst_day-1000-1",
+# Then start annotation using rstoat. Can get dataset ids using my_datasets()
+dataset_list <- my_datasets()
+
+#start_annotation_batch("dataset_id", "Annotation Title", "Layer Code(s)")
+start_annotation_batch(dataset_list$dataset_id[1], "TT_final", c("landsat8-evi-30-16", "modis-lst_day-1000-1", "modis-lst_day-1000-30"))
+start_annotation_batch(dataset_list$dataset_id[2], "RTH_final", c("landsat8-evi-30-16", "landsat8-evi-250-16", "modis-lst_day-1000-1",
                                                  "earthenvhabhet-coefficient_variation-1000-0"))
+
+# Check job status
+my_jobs()
+
+# Download results
+download_annotation(job_list$annotation_id[1])
+download_annotation(job_list$annotation_id[2])
 
