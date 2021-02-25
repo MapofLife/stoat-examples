@@ -1,4 +1,3 @@
-rm(list = ls())
 library(ggplot2)
 library(cowplot)
 library(ggExtra)
@@ -39,8 +38,6 @@ load_multiple <- function(path, uuid){
 path <- "annotated"
 hummingbird_uuid <- "7cb51da4-6719-4eaa-8cb4-8a8f96ba3b70"
 titmouse_uuid <- "a1771b6f-ff76-4fe6-b6e3-e4e1014e0c5d"
-
-
 
 #######################################
 ##### EVI/LST OVER TIME: FIGURE 5 #####
@@ -128,8 +125,6 @@ spearman_dat <- na.omit(spearman_dat)
 cor(spearman_dat$cov, spearman_dat$abs_delta_evi, method = "spearman")
 nrow(spearman_dat)
 
-
-
 ##########################################
 ##### TEMPORAL GRAIN (LST): FIGURE 7 #####
 ##########################################
@@ -176,4 +171,3 @@ winter_summer <- wilcox_dat[wilcox_dat$season=="winter/summer",]
 median(winter_summer$abs_delta_lst)
 # boxplot
 boxplot(wilcox_dat$abs_delta_lst~wilcox_dat$season)
-

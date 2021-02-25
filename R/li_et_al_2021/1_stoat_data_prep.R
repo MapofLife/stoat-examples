@@ -1,6 +1,6 @@
-rm(list = ls())
 library(auk)
 library(dplyr)
+library(spThin)
 library(rstoat)
 
 # Source Data: EBird Basic Dataset Version 1.12, July 2020. Retrieved 9/13/2020.
@@ -19,6 +19,7 @@ library(rstoat)
 # Region: All Regions
 # Date Range: All Dates
 
+# Use auk r package to read EBird database files
 titmouse_file <- auk_ebd("ebd_tuftit_relJul-2020/ebd_tuftit_relJul-2020.txt")
 hummingbird_file <- auk_ebd("ebd_rthhum_relJul-2020/ebd_rthhum_relJul-2020.txt")
 
@@ -26,6 +27,7 @@ hummingbird_file <- auk_ebd("ebd_rthhum_relJul-2020/ebd_rthhum_relJul-2020.txt")
 ##### TUFTED TITMOUSE #####
 ###########################
 
+# Filter using auk
 titmouse_filtered <- titmouse_file %>% 
   # define filters
   auk_species(species = "Tufted Titmouse") %>% 
@@ -36,7 +38,7 @@ titmouse_filtered <- titmouse_file %>%
   # read text file into r data frame
   read_ebd()
 
-# filter to only personal locations
+# filter to only personal locations (can't in auk)
 titmouse_filtered <- dplyr::filter(titmouse_filtered, locality_type == "P")
 
 # reformat
@@ -49,7 +51,7 @@ titmouse_filtered <- data.frame(scientificName = titmouse_filtered$scientific_na
 set.seed(1)
 titmouse_sampled <- titmouse_filtered[sample(nrow(titmouse_filtered), 20000),]
 
-# spatial thinning
+# spatial thinning using spThin
 thin(titmouse_sampled, lat.col = "decimalLatitude", long.col = "decimalLongitude", 
      spec.col = "scientificName", thin.par = 5, reps = 1,
      out.dir = 'titmouse_thinned/', out.base = "titmouse", write.log.file = FALSE)
@@ -71,8 +73,6 @@ titmouse_thinned <- data.frame(scientificName = titmouse_thinned$scientificName.
                                decimalLongitude = titmouse_thinned$decimalLongitude,
                                eventDate = titmouse_thinned$eventDate)
 write.csv(titmouse_thinned, 'tufted_titmouse.csv', row.names = FALSE)
-
-
 
 #####################################
 ##### RUBY-THROATED HUMMINGBIRD #####
@@ -101,7 +101,7 @@ hummingbird_filtered <- data.frame(scientificName = hummingbird_filtered$scienti
 set.seed(1)
 hummingbird_sampled <- hummingbird_filtered[sample(nrow(hummingbird_filtered), 20000),]
 
-# spatial thinning
+# spatial thinning using spThin
 thin(hummingbird_sampled, lat.col = "decimalLatitude", long.col = "decimalLongitude", 
      spec.col = "scientificName", thin.par = 5, reps = 1,
      out.dir = 'hummingbird_thinned/', out.base = "hummingbird", write.log.file = FALSE)
@@ -124,11 +124,11 @@ hummingbird_thinned <- data.frame(scientificName = hummingbird_thinned$scientifi
                                eventDate = hummingbird_thinned$eventDate)
 write.csv(hummingbird_thinned, "ruby-throated_hummingbird.csv", row.names = FALSE)
 
-
-
 #####################################
 # Both datasets (.CSVs) uploaded to Map of Life using Map of Life Uploader
 # www.mol.org/upload
+
+mol_login("--LOGIN CREDENTIALS--")
 
 # Then start annotation using rstoat. Can get dataset ids using my_datasets()
 dataset_list <- my_datasets()
@@ -144,4 +144,3 @@ my_jobs()
 # Download results
 download_annotation(job_list$annotation_id[1])
 download_annotation(job_list$annotation_id[2])
-
