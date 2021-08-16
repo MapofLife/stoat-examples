@@ -1,1 +1,0 @@
-{"dataset_id": "647c0a69-e193-4e31-b6e8-f3d6e798b942", "title": "TT_final", "layers": [{"product": "landsat8", "variable": "evi", "spatial": 30, "temporal": 16}, {"product": "modis", "variable": "lst_day", "spatial": 1000, "temporal": 1}, {"product": "modis", "variable": "lst_day", "spatial": 1000, "temporal": 30}]}
